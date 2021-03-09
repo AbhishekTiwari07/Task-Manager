@@ -1,0 +1,17 @@
+{
+  "name": "task_manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start":"node src/index.js"
+  },
+  "author": "JUZo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.19",
+    "validator": "^13.5.2"
+  }
+}
