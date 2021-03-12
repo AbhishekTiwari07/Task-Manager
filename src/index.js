@@ -1,5 +1,4 @@
 const express = require('express')
-const bcrypt = require('bcryptjs')
 require('./db/mongoose.js')
 const userRouter = require('./routers/user.js')
 const taskRouter = require('./routers/task.js')

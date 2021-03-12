@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const userSchema = mongoose.Schema({
     name : {
@@ -10,6 +11,7 @@ const userSchema = mongoose.Schema({
     },
     email:{
         type:String,
+        unique:true,
         trim:true,
         required: true,
         validate(value){
@@ -35,8 +37,40 @@ const userSchema = mongoose.Schema({
             if(value<0)
                 throw new Error("Enter valid age")
         }
-    }
+    },
+    tokens:[{
+        token:{
+            type:String,
+            required:true
+        }
+    }]
 })
+
+userSchema.methods.getPublicProfile = async function(){
+    const obj = this.toObject()
+    delete obj.password
+    delete obj.tokens
+    return obj
+}
+
+userSchema.methods.generateToken = async function(){
+    const token = jwt.sign({ _id : this._id.toString()},'Lkasarkar')
+    this.tokens = this.tokens.concat({ token })
+    await this.save()
+    return token
+}
+
+userSchema.statics.findByCredentials = async (email,password) => {
+    const user = await User.findOne({email : email})
+    if(!user)
+        throw new Error('No User Found')
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if(isMatch)
+        throw new Error('Login Failed')
+
+    return user
+}
 
 userSchema.pre('save', async function(next) {
     if(this.isModified('password')){
