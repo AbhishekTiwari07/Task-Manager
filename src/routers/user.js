@@ -2,6 +2,14 @@ const express = require('express')
 const router = new express.Router()
 const auth = require('../middleware/auth.js')
 const User = require('../models/user.js')
+const multer = require('multer')
+
+const upload = multer({
+    dest: "images",
+    limits:{
+        fileSize: 1000000
+    }
+})
 
 router.get('/users/me', auth ,async (req,res)=>{
     try{
@@ -33,6 +41,10 @@ router.post('/users/login',async (req,res)=>{
     catch(e){
         res.send(e)
     }
+})
+
+router.post('/user/me/image', upload.single('image'), (req,res)=>{
+    res.send()
 })
 
 router.post('/users/logout',auth, async (req,res)=>{
