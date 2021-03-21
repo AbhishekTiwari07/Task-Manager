@@ -11,6 +11,10 @@ const upload = multer({
     }
 })
 
+router.get('/login',(req,res)=>{
+    res.render('login')
+})
+
 router.get('/users/me', auth ,async (req,res)=>{
     try{
         res.send(req.user)
